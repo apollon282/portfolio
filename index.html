@@ -9,6 +9,70 @@
     <meta name="keywords" content="React developer, frontend developer, freelance web dev, Wongdu Elizabeth portfolio">
     <meta name="author" content="Wongdu Elizabeth united states">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://apis.google.com/js/api.js"></script>
+  <script>
+    let siteUrl = "https://travisallenluckinbill.netlify.app"; // Your website URL
+
+    function authenticate() {
+      gapi.load('client:auth2', () => {
+        gapi.auth2.init({
+          client_id: '76979528279-dgg0lm4kp93gr1qdr26tm1s7jrcgq3aa.apps.googleusercontent.com' // Replace with your OAuth Client ID
+        }).then(() => {
+          gapi.auth2.getAuthInstance().signIn();
+        });
+      });
+    }
+
+    function loadClient() {
+      gapi.client.load('https://webmasters.googleapis.com/$discovery/rest?version=v3')
+        .then(() => {
+          console.log("API client loaded");
+        });
+    }
+
+    function fetchPerformanceData() {
+      gapi.client.webmasters.searchanalytics.query({
+        siteUrl: siteUrl,
+        startDate: '2025-04-01',
+        endDate: '2025-04-10',
+        dimensions: ['query'],
+        rowLimit: 10
+      }).then((response) => {
+        let data = response.result.rows;
+
+        // Render the data in a table
+        let table = `<table border="1">
+          <tr>
+            <th>Query</th>
+            <th>Clicks</th>
+            <th>Impressions</th>
+            <th>CTR</th>
+            <th>Position</th>
+          </tr>`;
+        
+        data.forEach(row => {
+          let query = row.keys[0];
+          let clicks = row.clicks;
+          let impressions = row.impressions;
+          let ctr = ((row.clicks / row.impressions) * 100).toFixed(2) + "%";
+          let position = row.position.toFixed(2);
+
+          table += `<tr>
+            <td>${query}</td>
+            <td>${clicks}</td>
+            <td>${impressions}</td>
+            <td>${ctr}</td>
+            <td>${position}</td>
+          </tr>`;
+        });
+
+        table += `</table>`;
+        document.getElementById("data-table").innerHTML = table;
+      }, (err) => {
+        console.error("Error fetching data:", err);
+      });
+    }
+  </script>
     <link rel="shortcut icon" href="./assets/images/logo.png">
     <link rel="stylesheet" href="./assets/css/hero.css">
     <link rel="stylesheet" href="./assets/css/portfolio.css">
