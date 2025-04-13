@@ -31,6 +31,7 @@
     }
 
     function fetchPerformanceData() {
+        console.log('API Client Loaded')
       gapi.client.webmasters.searchanalytics.query({
         siteUrl: siteUrl,
         startDate: '2025-04-01',
