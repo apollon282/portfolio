@@ -8,72 +8,6 @@
     <meta name="description" content="Portfolio of Wongdu Elizabeth, a freelance React developer creating fast, SEO-optimized websites.">
     <meta name="keywords" content="React developer, frontend developer, freelance web dev, Wongdu Elizabeth portfolio">
     <meta name="author" content="Wongdu Elizabeth united states">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://apis.google.com/js/api.js"></script>
-  <script>
-    let siteUrl = "https://travisallenluckinbill.netlify.app"; // Your website URL
-
-    function authenticate() {
-      gapi.load('client:auth2', () => {
-        gapi.auth2.init({
-          client_id: '76979528279-dgg0lm4kp93gr1qdr26tm1s7jrcgq3aa.apps.googleusercontent.com' // Replace with your OAuth Client ID
-        }).then(() => {
-          gapi.auth2.getAuthInstance().signIn();
-        });
-      });
-    }
-
-    function loadClient() {
-      gapi.client.load('https://webmasters.googleapis.com/$discovery/rest?version=v3')
-        .then(() => {
-          console.log("API client loaded");
-        });
-    }
-
-    function fetchPerformanceData() {
-        console.log('API Client Loaded')
-      gapi.client.webmasters.searchanalytics.query({
-        siteUrl: siteUrl,
-        startDate: '2025-04-01',
-        endDate: '2025-04-10',
-        dimensions: ['query'],
-        rowLimit: 10
-      }).then((response) => {
-        let data = response.result.rows;
-
-        // Render the data in a table
-        let table = `<table border="1">
-          <tr>
-            <th>Query</th>
-            <th>Clicks</th>
-            <th>Impressions</th>
-            <th>CTR</th>
-            <th>Position</th>
-          </tr>`;
-        
-        data.forEach(row => {
-          let query = row.keys[0];
-          let clicks = row.clicks;
-          let impressions = row.impressions;
-          let ctr = ((row.clicks / row.impressions) * 100).toFixed(2) + "%";
-          let position = row.position.toFixed(2);
-
-          table += `<tr>
-            <td>${query}</td>
-            <td>${clicks}</td>
-            <td>${impressions}</td>
-            <td>${ctr}</td>
-            <td>${position}</td>
-          </tr>`;
-        });
-
-        table += `</table>`;
-        document.getElementById("data-table").innerHTML = table;
-      }, (err) => {
-        console.error("Error fetching data:", err);
-      });
-    }
-  </script>
     <link rel="shortcut icon" href="./assets/images/logo.png">
     <link rel="stylesheet" href="./assets/css/hero.css">
     <link rel="stylesheet" href="./assets/css/portfolio.css">
@@ -84,19 +18,94 @@
     <link rel="stylesheet" href="./assets/css/pricing.css">
     <link rel="stylesheet" href="./assets/css/cloud_stars.css">
     <link rel="stylesheet" href="./assets/css/pokermon.css">
-
     <link href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Parisienne&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.3/particles.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
-    <!-- The main Three.js file -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.3/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/108/three.min.js'></script>
-
-    <!-- This brings in the ability to load custom 3D objects in the .gltf file format. Blender allows the ability to export to this format out the box -->
     <script src='https://cdn.jsdelivr.net/gh/mrdoob/Three.js@r92/examples/js/loaders/GLTFLoader.js'></script>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script>
+        let siteUrl = "https://travisallenluckinbill.netlify.app"; // Your website URL
+
+        // Authenticate the user
+        function authenticate() {
+            console.log("Authenticating...");
+            gapi.load('client:auth2', () => {
+                gapi.auth2.init({
+                    client_id: '76979528279-dgg0lm4kp93gr1qdr26tm1s7jrcgq3aa.apps.googleusercontent.com' // Replace with your OAuth Client ID
+                }).then(() => {
+                    return gapi.auth2.getAuthInstance().signIn();
+                }).then(() => {
+                    console.log("User authenticated");
+                }).catch(err => {
+                    console.error("Authentication failed:", err);
+                });
+            });
+        }
+
+        // Load the API client
+        function loadClient() {
+            console.log("Loading API client...");
+            gapi.client.load('https://webmasters.googleapis.com/$discovery/rest?version=v3')
+                .then(() => {
+                    console.log("API client loaded");
+                }).catch(err => {
+                    console.error("Failed to load API client:", err);
+                });
+        }
+
+        // Fetch performance data
+        function fetchPerformanceData() {
+            console.log("Fetching performance data...");
+            gapi.client.webmasters.searchanalytics.query({
+                siteUrl: siteUrl,
+                startDate: '2025-04-01',
+                endDate: '2025-04-10',
+                dimensions: ['query'],
+                rowLimit: 10
+            }).then((response) => {
+                console.log("Data fetched successfully", response.result);
+                let data = response.result.rows;
+
+                // Render data as a table
+                let table = `<table border="1" style="width: 100%; text-align: left;">
+                    <thead>
+                        <tr>
+                            <th>Query</th>
+                            <th>Clicks</th>
+                            <th>Impressions</th>
+                            <th>CTR</th>
+                            <th>Position</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+                data.forEach(row => {
+                    let query = row.keys[0];
+                    let clicks = row.clicks;
+                    let impressions = row.impressions;
+                    let ctr = ((row.clicks / row.impressions) * 100).toFixed(2) + "%";
+                    let position = row.position.toFixed(2);
+
+                    table += `<tr>
+                        <td>${query}</td>
+                        <td>${clicks}</td>
+                        <td>${impressions}</td>
+                        <td>${ctr}</td>
+                        <td>${position}</td>
+                    </tr>`;
+                });
+
+                table += `</tbody></table>`;
+                document.getElementById("data-table").innerHTML = table;
+            }).catch(err => {
+                console.error("Error fetching performance data:", err);
+            });
+        }
+    </script>
 </head>
 
 <body>
